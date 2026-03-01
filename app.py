@@ -14,21 +14,19 @@ uploaded_file = st.file_uploader("اختر صورة التمرين...", type=["j
 
 if uploaded_file and api_key:
     try:
-        # إعداد API
         genai.configure(api_key=api_key)
         image = Image.open(uploaded_file)
         st.image(image, caption='التمرين المرفوع', use_container_width=True)
         
         if st.button('توليد الملف وتحميله'):
             with st.spinner('جاري التحليل...'):
-                # استخدام أحدث نموذج متاح حالياً لتجنب خطأ 404
-                model = genai.GenerativeModel('gemini-2.0-flash') 
+                # استخدام النموذج المستقر
+                model = genai.GenerativeModel('gemini-1.5-flash') 
                 
                 prompt = "Extract math exercise from image. Format as a complete XeLaTeX document using Amiri font. Output ONLY LaTeX code."
                 response = model.generate_content([prompt, image])
                 latex_code = response.text
                 
-                # إزالة أي علامات Markdown قد يضيفها النموذج
                 clean_code = latex_code.replace("```latex", "").replace("```", "").strip()
                 
                 st.code(clean_code, language='latex')
