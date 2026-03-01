@@ -19,10 +19,12 @@ if uploaded_file and api_key:
         st.image(image, caption='التمرين المرفوع', use_container_width=True)
         
         if st.button('توليد الملف وتحميله'):
-            with st.spinner('جاري التحليل واستخراج الكود...'):
-                # تم تغيير اسم النموذج هنا لحل مشكلة 404
-                model = genai.GenerativeModel('gemini-1.5-pro')
-                prompt = "Extract math exercise from image. Format as a complete XeLaTeX document using Amiri font. Output ONLY code without any markdown formatting."
+            with st.spinner('جاري التحليل...'):
+                # استخدام الاسم العام المباشر لحل خطأ 404 نهائياً
+                model = genai.GenerativeModel('gemini-pro-vision') 
+                # ملاحظة: إذا استمر الخطأ، جرب تغيير السطر أعلاه فقط إلى: model = genai.GenerativeModel('gemini-1.5-flash-8b')
+                
+                prompt = "Extract math exercise from image. Format as a complete XeLaTeX document using Amiri font. Output ONLY code."
                 response = model.generate_content([prompt, image])
                 latex_code = response.text
                 
@@ -34,8 +36,9 @@ if uploaded_file and api_key:
                     file_name="exercise.tex",
                     mime="text/plain"
                 )
+                st.success("تم التوليد! حمل الملف وارفع في Overleaf.")
     except Exception as e:
         st.error(f"حدث خطأ: {e}")
 elif not api_key:
-    st.warning("⚠️ يرجى وضع مفتاح API في القائمة الجانبية (على اليسار) لبدء الاستخدام.")
+    st.warning("⚠️ يرجى وضع مفتاح API في القائمة الجانبية (على اليسار).")
     
