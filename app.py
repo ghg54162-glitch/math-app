@@ -4,7 +4,6 @@ from PIL import Image
 
 st.set_page_config(page_title="Math to LaTeX DZ", layout="centered")
 
-# القائمة الجانبية
 st.sidebar.title("إعدادات الموقع")
 api_key = st.sidebar.text_input("أدخل مفتاح API الخاص بك:", type="password")
 
@@ -20,9 +19,10 @@ if uploaded_file and api_key:
         st.image(image, caption='التمرين المرفوع', use_container_width=True)
         
         if st.button('توليد الملف وتحميله'):
-            with st.spinner('جاري التحليل...'):
-                model = genai.GenerativeModel('gemini-1.5-flash')
-                prompt = "Extract math exercise from image. Format as a complete XeLaTeX document using Amiri font. Output ONLY code."
+            with st.spinner('جاري التحليل واستخراج الكود...'):
+                # تم تغيير اسم النموذج هنا لحل مشكلة 404
+                model = genai.GenerativeModel('gemini-1.5-pro')
+                prompt = "Extract math exercise from image. Format as a complete XeLaTeX document using Amiri font. Output ONLY code without any markdown formatting."
                 response = model.generate_content([prompt, image])
                 latex_code = response.text
                 
@@ -35,7 +35,7 @@ if uploaded_file and api_key:
                     mime="text/plain"
                 )
     except Exception as e:
-        st.error(f"خطأ: {e}")
+        st.error(f"حدث خطأ: {e}")
 elif not api_key:
     st.warning("⚠️ يرجى وضع مفتاح API في القائمة الجانبية (على اليسار) لبدء الاستخدام.")
     
