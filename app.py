@@ -21,8 +21,8 @@ if uploaded_file and api_key:
         if st.button('توليد الملف وتحميله'):
             with st.spinner('جاري التحليل...'):
                 # استخدام النموذج المستقر
-                model = genai.GenerativeModel('gemini-1.5-flash') 
-                
+                model = genai.GenerativeModel('gemini-1.5-pro-latest')
+
                 prompt = "Extract math exercise from image. Format as a complete XeLaTeX document using Amiri font. Output ONLY LaTeX code."
                 response = model.generate_content([prompt, image])
                 latex_code = response.text
